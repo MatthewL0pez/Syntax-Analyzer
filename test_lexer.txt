@@ -1,0 +1,37 @@
+/* Test whitespace, comments, operators, separators, and unknown tokens */
+
+integer x, y, z;
+real total, avg, temp;
+boolean done, flag;
+
+/* Initialize values */
+x = 10;      y = 20;     z = 30;
+total = 0.0; avg = 0.0;  temp = 1.5;
+done = false; flag = true;
+
+/* While loop with weird spacing and comments */
+while   (   x   <   z   )   {
+    total = total + x;
+    x = x + 1;   /* increment x */
+
+    /* nested if with comparison operators */
+    if (total >= 100.0)  /* note: your lexer uses "=>" not ">=", so this will test that */
+        flag = true;
+    otherwise
+        flag = false;
+    fi
+
+    /* random separators and operators */
+    y = y - 1;
+    @ avg = total / 3.0;
+
+    // Some bad/unknown characters to see how lexer handles them
+    x = x + 1 # $ ;
+}
+
+/* Final reads/writes and return */
+read x;
+read y;
+write total;
+write avg;
+return;
