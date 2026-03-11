@@ -1,0 +1,16 @@
+integer x y z
+real rate interestRate1 avg1
+boolean flag isTrue isFalse
+
+function main {
+    integer integerVar realVar booleanVar
+    read x
+    read interestRate1
+    write x
+    write interestRate1
+    return
+}
+
+xVar y1 y2 y3 temp temp2 temp3
+if otherwise fi while read write function boolean real integer true false
+andrew andrew1 csuf csuf323 rat26s ratLexer
