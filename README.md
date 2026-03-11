@@ -13,10 +13,10 @@ The syntax analyzer should:
 ---
 
 # New files as of 3/10 to WORK ON...
-   In `include/`
+In `include/`
 - `Parser.h`
 
-    In `src/`
+In `src/`
 - `Parser.cpp`
 
 # How work will be divided...
