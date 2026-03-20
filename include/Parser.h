@@ -2,7 +2,7 @@
 #define PARSER_H
 
 #include "Lexer.h"
-#include "Token.h"
+#include "Tokens.h"
 #include <fstream> 
 #include <string> 
 
@@ -11,19 +11,31 @@ class Parser {
     Parser(Lexer& lexer, std::ofstream& outFile, bool printRules = true);
     void Rat26S();
     void OptFunctionDefinitions();
-    void FunctionDefintions();
+    void FunctionDefinitions();
     void Function();
     void ParameterList();
     void Parameter();
-    void Qualifer();
+    void Qualifier();
     void Body();
     void OptDeclarationList();
+    void OptParameterList();
     void DeclarationList();
     void Declaration();
     void IDs();
     void Empty();
 
     
+    void StatementList();
+    void Statement();
+    void Bracket();
+    void Assign();
+    void If();
+    void Return();
+    void Print();
+    void Scan();
+    void While();
+    
+    void Expression();
     
     
          

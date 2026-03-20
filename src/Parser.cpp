@@ -1,4 +1,3 @@
-
 #include "Parser.h"
 #include <cstdlib>
 #include <iostream>
@@ -161,6 +160,8 @@ void Parser::Body() {
     match(T_Seperator, "{");
     OptDeclarationList();
 
+    StatementList();
+
 
     match(T_Seperator, "}");
 }
@@ -211,4 +212,126 @@ void Parser::IDs() {
 // R29
 void Parser::Empty() {
     printProduction("<Empty> -> ε");
+}
+
+//R14 Statement List
+void Parser::StatementList(){
+    printProduction("<Statement List> -> <Statement> <Statement List> | <Statements>");
+    Statement();
+
+    if(currentToken_.tokenCategory == T_Identifier ||
+       currentToken_.lexeme == "if" ||
+       currentToken_.lexeme == "while" ||
+       currentToken_.lexeme == "return" ||
+       currentToken_.lexeme == "print" ||
+       currentToken_.lexeme == "scan" ||
+       currentToken_.lexeme == "{" 
+       ) {
+        StatementList();
+       }
+
+};
+
+//R15 Statement
+void Parser::Statement() {
+    printProduction("<Statement> -> ");
+    
+    if(currentToken_.tokenCategory == T_Identifier){
+        Assign();
+    }
+    else if (currentToken_.lexeme == "if"){
+        If();
+    }
+    else if (currentToken_.lexeme == "while"){   
+        While();
+    }
+    else if (currentToken_.lexeme == "return"){
+        Return();
+    }
+    else if (currentToken_.lexeme == "print"){
+        Print();
+    }
+    else if (currentToken_.lexeme == "scan"){
+        Scan();
+    }
+    else if (currentToken_.lexeme == "{"){
+        Bracket();
+    }
+    else {
+        error("Invalid Statement, Not Found");
+    }
+};
+
+//R16 Bracket 
+
+void Parser::Bracket(){
+    printProduction("<Compound> -> { <Statement List> }");
+
+    match(T_Seperator, "{");
+    StatementList();
+    match(T_Seperator, "}");
+
+};
+
+//R17 Assign
+void Parser::Assign(){
+    printProduction("<Assign> -> <Identifier> = <Expression> ;");
+    match(T_Identifier);
+    match(T_Operator, "=");
+    Expression();
+    match(T_Seperator, ";");
+};
+
+//R18 If
+void Parser::If(){
+    printProduction("If ( <Expression> <Statement> [else <Statement> ] )");
+    match(T_Keyword, "if");
+    match(T_Seperator, "(");
+    Expression();
+    match(T_Seperator, ")");
+
+    Statement();
+
+    if (currentToken_.lexeme == "else"){
+        match(T_Keyword, "else");
+        Statement();
+    }
+
+};
+
+//R19 Return
+void Parser::Return(){
+    printProduction("< Return > -> return <Expression> ; | return ;");
+    match(T_Keyword, "return");
+    if(currentToken_.lexeme == ";") {
+        Expression();
+    }
+
+    match(T_Seperator, ";");
+};
+
+void Parser::Print(){
+    printProduction("< Print > -> Print ( <Expression> ); ");
+    match(T_Keyword, "print");
+    match(T_Seperator, "(");
+    Expression();
+    match(T_Seperator, ")");
+    match(T_Seperator, ";");
+};
+
+void Parser::Scan(){
+    printProduction("< Scan > -> scan (<IDs> ); ");
+    match(T_Seperator, "(");
+    IDs();
+    match(T_Seperator, ")");
+    match(T_Seperator, ";");
+};
+
+void Parser::While(){
+    printProduction("< While > -> while (<Expression>) <Statement> ");
+    match(T_Keyword, "while");
+    match(T_Seperator, "(");
+    Expression();
+    match(T_Seperator, ")");
+    Statement();
 }
