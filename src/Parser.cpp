@@ -310,6 +310,7 @@ void Parser::Return(){
     match(T_Seperator, ";");
 };
 
+//R20
 void Parser::Print(){
     printProduction("< Print > -> Print ( <Expression> ); ");
     match(T_Keyword, "print");
@@ -319,6 +320,7 @@ void Parser::Print(){
     match(T_Seperator, ";");
 };
 
+//R21
 void Parser::Scan(){
     printProduction("< Scan > -> scan (<IDs> ); ");
     match(T_Seperator, "(");
@@ -327,6 +329,7 @@ void Parser::Scan(){
     match(T_Seperator, ";");
 };
 
+//R22
 void Parser::While(){
     printProduction("< While > -> while (<Expression>) <Statement> ");
     match(T_Keyword, "while");
