@@ -56,6 +56,37 @@ bool Parser::isQualifier() const {
             currentToken_.lexeme == "real");
 }
 
+// PERSON 3 - PARSER STATE NEEDS 
+bool Parser::isStatementStart() const {
+    return currentToken_.tokenCategory == T_Identifier ||
+           currentToken_.lexeme == "if" ||
+           currentToken_.lexeme == "return" ||
+           currentToken_.lexeme == "write" ||
+           currentToken_.lexeme == "read" ||
+           currentToken_.lexeme == "while" ||
+           currentToken_.lexeme == "{";
+}
+
+bool Parser::isRelopToken() const {
+    return currentToken_.tokenCategory == T_Operator &&
+           (currentToken_.lexeme == "==" ||
+            currentToken_.lexeme == "!=" ||
+            currentToken_.lexeme == ">"  ||
+            currentToken_.lexeme == "<"  ||
+            currentToken_.lexeme == "<=" ||
+            currentToken_.lexeme == "=>");
+}
+
+bool Parser::isExpressionStart() const {
+    return currentToken_.tokenCategory == T_Identifier ||
+           currentToken_.tokenCategory == T_Integer ||
+           currentToken_.tokenCategory == T_Real ||
+           currentToken_.lexeme == "(" ||
+           currentToken_.lexeme == "-" ||
+           currentToken_.lexeme == "true" ||
+           currentToken_.lexeme == "false";
+}
+
 // R1
 void Parser::Rat26S() {
     printProduction("<Rat26S> -> <Opt Function Definitions> @ <Opt Declaration List> <Statement List> @");
