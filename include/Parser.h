@@ -9,6 +9,7 @@
 class Parser {
     public:
     Parser(Lexer& lexer, std::ofstream& outFile, bool printRules = true);
+    // PERSON 1 + the general parser struct
     void Rat26S();
     void OptFunctionDefinitions();
     void FunctionDefinitions();
@@ -24,7 +25,7 @@ class Parser {
     void IDs();
     void Empty();
 
-    
+    // STATEMENTS
     void StatementList();
     void Statement();
     void Bracket();
@@ -35,14 +36,15 @@ class Parser {
     void Scan();
     void While();
     
+    // PERSON 3 rules
+    void Condition();
+    void Relop();
     void Expression();
-    
-    
-         
-    
-    
-    
-    
+    void ExpressionPrime();
+    void Term();
+    void TermPrime();
+    void Factor();
+    void Primary();
     
     private: 
     Lexer& lexer_; //connects lexer 
@@ -55,6 +57,9 @@ class Parser {
     void printProduction(const std::string& rule); //prints grammar rule 
     void error(const std::string& message); //hanndles sytax errors
     bool isQualifier() const; //checks if token is int bool or real 
+    bool isStatementStart() const; // check to begin statement
+    bool isRelopToken() const; // check tokecn to RELOOP through statemtn
+    bool isExpressionStart() const; // check to inialize an expression
 
 
 
