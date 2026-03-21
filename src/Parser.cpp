@@ -456,4 +456,43 @@ void Parser::Factor() {
     }
 }
 
+// R28
+void Parser::Primary() {
+    printProduction("<Primary> -> <Identifier> | <Integer> | <Identifier> ( <IDs> ) | ( <Expression> ) | <Real> | true | false");
+
+    if (currentToken_.tokenCategory == T_Identifier) {
+        match(T_Identifier);
+
+        if (currentToken_.tokenCategory == T_Seperator &&
+            currentToken_.lexeme == "(") {
+            match(T_Seperator, "(");
+            IDs();
+            match(T_Seperator, ")");
+        }
+    }
+    else if (currentToken_.tokenCategory == T_Integer) {
+        match(T_Integer);
+    }
+    else if (currentToken_.tokenCategory == T_Real) {
+        match(T_Real);
+    }
+    else if (currentToken_.tokenCategory == T_Seperator &&
+             currentToken_.lexeme == "(") {
+        match(T_Seperator, "(");
+        Expression();
+        match(T_Seperator, ")");
+    }
+    else if (currentToken_.tokenCategory == T_Keyword &&
+             currentToken_.lexeme == "true") {
+        match(T_Keyword, "true");
+    }
+    else if (currentToken_.tokenCategory == T_Keyword &&
+             currentToken_.lexeme == "false") {
+        match(T_Keyword, "false");
+    }
+    else {
+        error("expected primary");
+    }
+}
+
 
