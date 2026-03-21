@@ -369,3 +369,51 @@ void Parser::While(){
     match(T_Seperator, ")");
     Statement();
 }
+
+// R23
+void Parser::Condition() {
+    printProduction("<Condition> -> <Expression> <Relop> <Expression>");
+
+    Expression();
+    Relop();
+    Expression();
+}
+
+// R24 
+void Parser::Relop() {
+    printProduction("<Relop> -> == | != | > | < | <= | =>");
+
+    if (isRelopToken()) {
+        std::string relopLexeme = currentToken_.lexeme;
+        match(T_Operator, relopLexeme);
+    } else {
+        error("expected relational operator");
+    }
+}
+
+// R25  (rewritten to remove left recursion)
+void Parser::Expression() {
+    printProduction("<Expression> -> <Term> <Expression Prime>");
+
+    Term();
+    ExpressionPrime();
+}
+
+void Parser::ExpressionPrime() {
+    printProduction("<Expression Prime> -> + <Term> <Expression Prime> | - <Term> <Expression Prime> | epsilon");
+
+    if (currentToken_.tokenCategory == T_Operator &&
+        currentToken_.lexeme == "+") {
+        match(T_Operator, "+");
+        Term();
+        ExpressionPrime();
+    } else if (currentToken_.tokenCategory == T_Operator &&
+               currentToken_.lexeme == "-") {
+        match(T_Operator, "-");
+        Term();
+        ExpressionPrime();
+    } else {
+        Empty();
+    }
+}
+
