@@ -417,3 +417,43 @@ void Parser::ExpressionPrime() {
     }
 }
 
+// R26 (rewritten to remove left recursion)
+void Parser::Term() {
+    printProduction("<Term> -> <Factor> <Term Prime>");
+
+    Factor();
+    TermPrime();
+}
+
+void Parser::TermPrime() {
+    printProduction("<Term Prime> -> * <Factor> <Term Prime> | / <Factor> <Term Prime> | epsilon");
+
+    if (currentToken_.tokenCategory == T_Operator &&
+        currentToken_.lexeme == "*") {
+        match(T_Operator, "*");
+        Factor();
+        TermPrime();
+    } else if (currentToken_.tokenCategory == T_Operator &&
+               currentToken_.lexeme == "/") {
+        match(T_Operator, "/");
+        Factor();
+        TermPrime();
+    } else {
+        Empty();
+    }
+}
+
+// R27
+void Parser::Factor() {
+    printProduction("<Factor> -> - <Primary> | <Primary>");
+
+    if (currentToken_.tokenCategory == T_Operator &&
+        currentToken_.lexeme == "-") {
+        match(T_Operator, "-");
+        Primary();
+    } else {
+        Primary();
+    }
+}
+
+
