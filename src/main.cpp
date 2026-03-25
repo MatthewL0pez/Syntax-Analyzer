@@ -3,11 +3,12 @@
 #include <string>
 
 #include "Lexer.h"
+#include "Parser.h"
 #include "Tokens.h"
 
 int main(int argc, char* argv[]) {
 
-    //makes sure theres at least one input file
+    // make sure there is at least one input file
     if (argc < 2) {
         std::cout << "Usage: " << argv[0] << " <input_file> [output_file]" << std::endl;
         return 1;
@@ -15,48 +16,48 @@ int main(int argc, char* argv[]) {
 
     std::string inputFileName = argv[1];
 
-    // create the lexer using the input file name
+    // create lexer using input file
     Lexer lexer(inputFileName);
 
     if (!lexer.isOpen()) {
-        std::cerr << "Error: could not open input file: " << inputFileName << std::endl; //checks if file is acctually opened 
+        std::cerr << "Error: could not open input file: " << inputFileName << std::endl;
         return 1;
     }
 
-    // if there's a second arguemnt it will print out the oupt to that file instead of terminal
+    // if second argument exists, use it as output file
     std::ofstream outFile;
     bool useOutFile = false;
 
     if (argc >= 3) {
         std::string outputFileName = argv[2];
         outFile.open(outputFileName);
+
         if (!outFile.is_open()) {
             std::cerr << "Error: could not open output file: " << outputFileName << std::endl;
             return 1;
         }
+
         useOutFile = true;
     }
 
-    std::ostream& out = useOutFile ? static_cast<std::ostream&>(outFile) : std::cout;// this is for either a file or temrnal as output 
+    // if no output file provided, default output file
+    if (!useOutFile) {
+        outFile.open("syntax_output.txt");
 
-
-    out << "Token\t\tLexeme" << std::endl;
-    out << "-----------------------------" << std::endl;
-
-    // calls lexer until we hit end of file 
-    while (true) {
-        Token t = lexer.lexer(); //gets next token 
-
-        if (t.tokenCategory == T_FileEnd) {   //stops when we reahc end of file 
-            break;
+        if (!outFile.is_open()) {
+            std::cerr << "Error: could not create default output file." << std::endl;
+            return 1;
         }
-
-        out << tokenName(t.tokenCategory) << "\t\t" << t.lexeme << std::endl;
     }
 
-    if (useOutFile) {
-        outFile.close(); //closes output file 
-    }
+    // create parser and start parsing
+    Parser parser(lexer, outFile, true);
 
+    parser.Rat26S();
+
+    outFile << "\nParsing completed successfully.\n";
+    std::cout << "Parsing completed successfully." << std::endl;
+
+    outFile.close();
     return 0;
 }

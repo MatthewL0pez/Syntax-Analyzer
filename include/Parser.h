@@ -2,20 +2,23 @@
 #define PARSER_H
 
 #include "Lexer.h"
-#include "Token.h"
-#include <fstream> 
-#include <string> 
+#include "Tokens.h"
+#include <fstream>
+#include <string>
 
 class Parser {
-    public:
+public:
     Parser(Lexer& lexer, std::ofstream& outFile, bool printRules = true);
+
+    // ===== PERSON 1 / TOP-LEVEL RULES =====
     void Rat26S();
     void OptFunctionDefinitions();
-    void FunctionDefintions();
+    void FunctionDefinitions();
     void Function();
+    void OptParameterList();
     void ParameterList();
     void Parameter();
-    void Qualifer();
+    void Qualifier();
     void Body();
     void OptDeclarationList();
     void DeclarationList();
@@ -23,32 +26,45 @@ class Parser {
     void IDs();
     void Empty();
 
-    
-    
-    
-         
-    
-    
-    
-    
-    
-    private: 
-    Lexer& lexer_; //connects lexer 
-    Token currentToken_; //stores current token being analyzed 
-    std::ofstream& out_; // this gives the output file 
-    bool printRules_; //allows for the printing of the grammar rules to be printed or not 
-    void advance(); //moves to next token 
-    void match(int expectedCategory, const std::string& expectedLexeme = ""); //checks if token matches 
-    void printToken(); //prints token + lexeme 
-    void printProduction(const std::string& rule); //prints grammar rule 
-    void error(const std::string& message); //hanndles sytax errors
-    bool isQualifier() const; //checks if token is int bool or real 
+    // ===== PERSON 2 / STATEMENTS =====
+    void StatementList();
+    void Statement();
+    void Bracket();
+    void Assign();
+    void If();
+    void Return();
+    void Print();
+    void Scan();
+    void While();
 
+    // ===== PERSON 3 / EXPRESSIONS =====
+    void Condition();
+    void Relop();
+    void Expression();
+    void ExpressionPrime();
+    void Term();
+    void TermPrime();
+    void Factor();
+    void Primary();
 
+private:
+    Lexer& lexer_;              // connects parser to lexer
+    Token currentToken_;        // current token being analyzed
+    std::ofstream& out_;        // output file stream
+    bool printRules_;           // controls grammar rule printing
 
+    // ===== HELPER FUNCTIONS =====
+    void advance();  
+    void match(int expectedCategory, const std::string& expectedLexeme = "");
+    void printToken();
+    void printProduction(const std::string& rule);
+    void error(const std::string& message);
 
-
-
-
+    // ===== HELPER CHECKS =====
+    bool isQualifier() const;
+    bool isStatementStart() const;
+    bool isRelopToken() const;
+    bool isExpressionStart() const;
 };
-#endif 
+
+#endif

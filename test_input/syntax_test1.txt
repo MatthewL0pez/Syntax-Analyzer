@@ -1,0 +1,13 @@
+function add(x integer, y integer)
+{
+    integer z;
+    z = x + y;
+    return z;
+}
+
+@
+integer a, b, c;
+read(a, b);
+c = a + b;
+write(c);
+@
