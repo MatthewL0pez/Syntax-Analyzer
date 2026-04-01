@@ -248,52 +248,45 @@ void Parser::Empty() {
 }
 
 //R14 Statement List
-void Parser::StatementList(){
-    printProduction("<Statement List> -> <Statement> <Statement List> | <Statements>");
+void Parser::StatementList() {
+    printProduction("<Statement List> -> <Statement> <Statement List> | <Statement>");
+
     Statement();
 
-    if(currentToken_.tokenCategory == T_Identifier ||
-       currentToken_.lexeme == "if" ||
-       currentToken_.lexeme == "while" ||
-       currentToken_.lexeme == "return" ||
-       currentToken_.lexeme == "print" ||
-       currentToken_.lexeme == "scan" ||
-       currentToken_.lexeme == "{" 
-       ) {
+    if (isStatementStart()) {
         StatementList();
-       }
-
-};
+    }
+}
 
 //R15 Statement
 void Parser::Statement() {
-    printProduction("<Statement> -> ");
-    
-    if(currentToken_.tokenCategory == T_Identifier){
+    printProduction("<Statement> -> <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>");
+
+    if (currentToken_.tokenCategory == T_Identifier) {
         Assign();
     }
-    else if (currentToken_.lexeme == "if"){
+    else if (currentToken_.lexeme == "if") {
         If();
     }
-    else if (currentToken_.lexeme == "while"){   
+    else if (currentToken_.lexeme == "while") {
         While();
     }
-    else if (currentToken_.lexeme == "return"){
+    else if (currentToken_.lexeme == "return") {
         Return();
     }
-    else if (currentToken_.lexeme == "print"){
+    else if (currentToken_.lexeme == "write") {
         Print();
     }
-    else if (currentToken_.lexeme == "scan"){
+    else if (currentToken_.lexeme == "read") {
         Scan();
     }
-    else if (currentToken_.lexeme == "{"){
+    else if (currentToken_.lexeme == "{") {
         Compound();
     }
     else {
-        error("Invalid Statement, Not Found");
+        error("expected start of statement");
     }
-};
+}
 
 //R16 Bracket 
 
@@ -304,7 +297,7 @@ void Parser::Compound(){
     StatementList();
     match(T_Seperator, "}");
 
-};
+}
 
 //R17 Assign
 void Parser::Assign(){
@@ -316,58 +309,67 @@ void Parser::Assign(){
 };
 
 //R18 If
-void Parser::If(){
-    printProduction("If ( <Expression> <Statement> [else <Statement> ] )");
+void Parser::If() {
+    printProduction("<If> -> if ( <Condition> ) <Statement> fi | if ( <Condition> ) <Statement> otherwise <Statement> fi");
+
     match(T_Keyword, "if");
     match(T_Seperator, "(");
-    Expression();
+    Condition();
     match(T_Seperator, ")");
-
     Statement();
 
-    if (currentToken_.lexeme == "else"){
-        match(T_Keyword, "else");
+    if (currentToken_.tokenCategory == T_Keyword &&
+        currentToken_.lexeme == "otherwise") {
+        match(T_Keyword, "otherwise");
         Statement();
     }
 
-};
+    match(T_Keyword, "fi");
+}
 
 //R19 Return
-void Parser::Return(){
-    printProduction("< Return > -> return <Expression> ; | return ;");
+void Parser::Return() {
+    printProduction("<Return> -> return ; | return <Expression> ;");
+
     match(T_Keyword, "return");
-    if(currentToken_.lexeme == ";") {
+
+    if (!(currentToken_.tokenCategory == T_Seperator &&
+          currentToken_.lexeme == ";")) {
         Expression();
     }
 
     match(T_Seperator, ";");
-};
+}
 
 //R20
-void Parser::Print(){
-    printProduction("< Print > -> Print ( <Expression> ); ");
-    match(T_Keyword, "print");
+void Parser::Print() {
+    printProduction("<Print> -> write ( <Expression> );");
+
+    match(T_Keyword, "write");
     match(T_Seperator, "(");
     Expression();
     match(T_Seperator, ")");
     match(T_Seperator, ";");
-};
+}
 
 //R21
-void Parser::Scan(){
-    printProduction("< Scan > -> scan (<IDs> ); ");
+void Parser::Scan() {
+    printProduction("<Scan> -> read ( <IDs> );");
+
+    match(T_Keyword, "read");
     match(T_Seperator, "(");
     IDs();
     match(T_Seperator, ")");
     match(T_Seperator, ";");
-};
+}
 
 //R22
-void Parser::While(){
-    printProduction("< While > -> while (<Expression>) <Statement> ");
+void Parser::While() {
+    printProduction("<While> -> while ( <Condition> ) <Statement>");
+
     match(T_Keyword, "while");
     match(T_Seperator, "(");
-    Expression();
+    Condition();
     match(T_Seperator, ")");
     Statement();
 }
@@ -402,20 +404,19 @@ void Parser::Expression() {
 }
 
 void Parser::ExpressionPrime() {
-    printProduction("<Expression Prime> -> + <Term> <Expression Prime> | - <Term> <Expression Prime> | epsilon");
+    printProduction("<Expression Prime> -> + <Term> <Expression Prime> | - <Term> <Expression Prime> | ε");
 
     if (currentToken_.tokenCategory == T_Operator &&
         currentToken_.lexeme == "+") {
         match(T_Operator, "+");
         Term();
         ExpressionPrime();
-    } else if (currentToken_.tokenCategory == T_Operator &&
-               currentToken_.lexeme == "-") {
+    }
+    else if (currentToken_.tokenCategory == T_Operator &&
+             currentToken_.lexeme == "-") {
         match(T_Operator, "-");
         Term();
         ExpressionPrime();
-    } else {
-        Empty();
     }
 }
 
@@ -428,20 +429,19 @@ void Parser::Term() {
 }
 
 void Parser::TermPrime() {
-    printProduction("<Term Prime> -> * <Factor> <Term Prime> | / <Factor> <Term Prime> | epsilon");
+    printProduction("<Term Prime> -> * <Factor> <Term Prime> | / <Factor> <Term Prime> | ε");
 
     if (currentToken_.tokenCategory == T_Operator &&
         currentToken_.lexeme == "*") {
         match(T_Operator, "*");
         Factor();
         TermPrime();
-    } else if (currentToken_.tokenCategory == T_Operator &&
-               currentToken_.lexeme == "/") {
+    }
+    else if (currentToken_.tokenCategory == T_Operator &&
+             currentToken_.lexeme == "/") {
         match(T_Operator, "/");
         Factor();
         TermPrime();
-    } else {
-        Empty();
     }
 }
 

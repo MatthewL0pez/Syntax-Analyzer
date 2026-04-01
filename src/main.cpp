@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
 
     //makes sure theres at least one input file
     if (argc < 3) {
-        std::cout << "Usage: " << argv[0] << " <input_file> [output_file]" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <input_file> <output_file> " << std::endl;
         return 1;
     }
 
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     Parser parser(lexer, outFile, true);
     parser.Rat26S();
 
-    outFile << "Parsing finished without syntax errors." << std::endl;
+    outFile << "\nParsing completed successfully. No syntax errors found.\n";
     outFile.close();
 
     return 0;
