@@ -28,7 +28,7 @@ class Parser {
     // STATEMENTS
     void StatementList();
     void Statement();
-    void Bracket();
+    void Compound();
     void Assign();
     void If();
     void Return();

@@ -89,13 +89,19 @@ bool Parser::isExpressionStart() const {
 
 // R1
 void Parser::Rat26S() {
-    printProduction("<Rat26S> -> <Opt Function Definitions> @ <Opt Declaration List> <Statement List> @");
+    printProduction("<Rat26S> -> @ <Opt Function Definitions> @ <Opt Declaration List> @ <Statement List> @");
 
+    match(T_Seperator, "@");
     OptFunctionDefinitions();
     match(T_Seperator, "@");
     OptDeclarationList();
+    match(T_Seperator, "@");
+    StatementList();
+    match(T_Seperator, "@");
 
-
+    if (currentToken_.tokenCategory != T_FileEnd) {
+        error("expected end of file after final @");
+    }
 }
 
 // R2
@@ -186,14 +192,10 @@ void Parser::Qualifier() {
 
 // R9
 void Parser::Body() {
-    printProduction("<Body> -> { <Opt Declaration List> <Statement List> }");
+    printProduction("<Body> -> { <Statement List> }");
 
     match(T_Seperator, "{");
-    OptDeclarationList();
-
     StatementList();
-
-
     match(T_Seperator, "}");
 }
 
@@ -286,7 +288,7 @@ void Parser::Statement() {
         Scan();
     }
     else if (currentToken_.lexeme == "{"){
-        Bracket();
+        Compound();
     }
     else {
         error("Invalid Statement, Not Found");
@@ -295,7 +297,7 @@ void Parser::Statement() {
 
 //R16 Bracket 
 
-void Parser::Bracket(){
+void Parser::Compound(){
     printProduction("<Compound> -> { <Statement List> }");
 
     match(T_Seperator, "{");
