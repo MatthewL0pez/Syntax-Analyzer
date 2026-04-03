@@ -1,0 +1,7 @@
+@
+@
+integer a;
+@
+a = 5;
+write(a);
+@
