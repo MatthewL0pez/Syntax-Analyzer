@@ -1,7 +1,8 @@
 @
 @
-integer a;
+integer a, b;
 @
-a = 5;
+read(a, b);
+a = a + b;
 write(a);
 @

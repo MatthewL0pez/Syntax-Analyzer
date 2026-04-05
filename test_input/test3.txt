@@ -1,14 +1,31 @@
 @
-function add(x, y integer)
-integer z;
+function square(num integer)
 {
-    z = x + y;
-    return z;
+    return num * num;
+}
+function choose(flag boolean, left, right integer)
+{
+    if (flag == true)
+        return left;
+    otherwise
+        return right;
+    fi
 }
 @
-integer a, b, c;
+integer start, end, step, current, chosen;
+boolean useStart;
+real sample;
 @
-read(a, b);
-c = a + b;
-write(c);
+read(start, end, step);
+current = start;
+useStart = true;
+sample = 4.5;
+while (current <= end)
+{
+    write(current);
+    chosen = choose(useStart, current, end);
+    write(chosen);
+    write(square(current));
+    current = current + step;
+}
 @

@@ -10,15 +10,37 @@ Token: Keyword Lexeme: integer
 <Qualifier> -> integer | boolean | real
 Token: Identifier Lexeme: a
 <IDs> -> <Identifier> , <IDs> | <Identifier>
+Token: Separator Lexeme: ,
+Token: Identifier Lexeme: b
+<IDs> -> <Identifier> , <IDs> | <Identifier>
 Token: Separator Lexeme: ;
 Token: Separator Lexeme: @
+Token: Keyword Lexeme: read
+<Statement List> -> <Statement> <Statement List> | <Statement>
+<Statement> -> <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Scan> -> read ( <IDs> );
+Token: Separator Lexeme: (
+Token: Identifier Lexeme: a
+<IDs> -> <Identifier> , <IDs> | <Identifier>
+Token: Separator Lexeme: ,
+Token: Identifier Lexeme: b
+<IDs> -> <Identifier> , <IDs> | <Identifier>
+Token: Separator Lexeme: )
+Token: Separator Lexeme: ;
 Token: Identifier Lexeme: a
 <Statement List> -> <Statement> <Statement List> | <Statement>
 <Statement> -> <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
 <Assign> -> <Identifier> = <Expression> ;
 Token: Operator Lexeme: =
-Token: Integer Lexeme: 5
+Token: Identifier Lexeme: a
 <Expression> -> <Term> <Expression Prime>
+<Term> -> <Factor> <Term Prime>
+<Factor> -> - <Primary> | <Primary>
+<Primary> -> <Identifier> | <Integer> | <Identifier> ( <IDs> ) | ( <Expression> ) | <Real> | true | false
+Token: Operator Lexeme: +
+<Term Prime> -> * <Factor> <Term Prime> | / <Factor> <Term Prime> | ε
+<Expression Prime> -> + <Term> <Expression Prime> | - <Term> <Expression Prime> | ε
+Token: Identifier Lexeme: b
 <Term> -> <Factor> <Term Prime>
 <Factor> -> - <Primary> | <Primary>
 <Primary> -> <Identifier> | <Integer> | <Identifier> ( <IDs> ) | ( <Expression> ) | <Real> | true | false

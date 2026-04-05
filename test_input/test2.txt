@@ -1,8 +1,16 @@
 @
+function bigger(x, y integer)
+{
+    if (x > y)
+        return x;
+    otherwise
+        return y;
+    fi
+}
 @
-integer a, b, c;
+integer a, b, maxValue;
 @
 read(a, b);
-c = a + b;
-write(c);
+maxValue = bigger(a, b);
+write(maxValue);
 @
